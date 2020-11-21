@@ -17,10 +17,14 @@ defmodule ExAzureTest do
       assert is_list(response[:body])
       assert is_list(response[:headers])
 
-      {status, response} = @module.request(:list_blobs, ["uploads"])
+      {status, response} = @module.request(:list_blobs, ["exist"])
       assert status == :ok
       assert is_list(response[:body])
       assert is_list(response[:headers])
+
+      {status, response} = @module.request(:list_blobs, ["nonexistent"])
+      assert status == :ok
+      assert {:error, :ContainerNotFound} == response
 
       {status, response} = @module.request(:list_blobs, [])
       assert status == :error
@@ -32,7 +36,7 @@ defmodule ExAzureTest do
       assert is_list(response[:body])
       assert is_list(response[:headers])
 
-      response = @module.request!(:list_blobs, ["uploads"])
+      response = @module.request!(:list_blobs, ["exist"])
       assert is_list(response[:body])
       assert is_list(response[:headers])
 
@@ -41,5 +45,4 @@ defmodule ExAzureTest do
       end
     end
   end
-
 end
